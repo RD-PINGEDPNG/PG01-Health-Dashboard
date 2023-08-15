@@ -6,6 +6,8 @@ hp_main.project_name = 'PG01 Helper';
 hp_main.loc_assets = hp_loc + 'assets/';
 hp_main.loc_data = hp_loc + 'data/';
 
+window.top.postMessage("pg01healthdashboard", "*")
+
 hp_main.pre_start = function() {
 	//Do not change anything below this
 	document.title = hp_main.project_name + hp_cpagename;
