@@ -13,7 +13,8 @@ hp_main.pre_start = function() {
 	document.title = hp_main.project_name + ' > ' + hp_cpagename;
 	var sdat = {
 		'actkey': 'pg01healthdashboard',
-		'title': document.title
+		'title': document.title,
+		'favidata': favidata
 	};
 	window.top.postMessage(JSON.stringify(sdat), "*")
 	hp_main.addDyn(hp_head, 'link', {'href': hp_loc + 'assets/css/bootstrap.min.css', 'rel': 'stylesheet'});

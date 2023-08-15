@@ -103,7 +103,8 @@ jqen.build_foot = function() {
     html += '<div class="col mb-3">';
     html += '<a href="' + hp_loc + 'index.html" class="d-flex align-items-center mb-3 link-dark text-decoration-none">';
     html += '<img class="bi me-2" width="40" height="40" src="' + hp_loc + 'assets/logos/rd.svg"></a>';
-    html += '<p class="text-muted">&copy; Romeo Dabok 2023</p></div>';
+    html += '<p class="text-muted">&copy; Romeo Dabok 2023</p><p>Got an issue or suggestion? Please contact';
+	html += 'me via <a href="mailto:romeo.dabok@gmail.com">email</a> or <a href="tel:+67574295680">mobile</a>!</div>';
     html += '<div class="col mb-3"></div>';
 
     html += '<div class="col mb-3"><h5>External Links</h5><ul class="nav flex-column">';

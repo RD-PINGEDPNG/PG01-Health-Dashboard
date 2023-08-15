@@ -3,8 +3,12 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-	<title></title>
 	<script>
+		var absolutePath = function(href) {
+			var link = document.createElement("a");
+			link.href = href;
+			return link.href;
+		}
 		//Without a server to manage this, we have to use this:
 		const hp_loc = "./";
 		const hp_cpagename = "About";
@@ -12,19 +16,58 @@
 		const hp_incode = "";
 		const hp_head = document.querySelector('head');
 		const hp_configs = {};
+		var appendg = [];
+		
+		//Make append groups
+		var icon_apple = document.createElement('link');
+		icon_apple.setAttribute('href', hp_loc + 'apple-touch-icon.png');
+		icon_apple.setAttribute('sizes', '180x180');
+		icon_apple.setAttribute('rel', 'apple-touch-icon');
+		appendg.push(icon_apple);
+		
+		var icon_32 = document.createElement('link');
+		icon_32.setAttribute('href', hp_loc + 'favicon-32x32.png');
+		icon_32.setAttribute('sizes', '32x32');
+		icon_32.setAttribute('rel', 'icon');
+		appendg.push(icon_32);
+		
+		var icon_16 = document.createElement('link');
+		icon_16.setAttribute('href', hp_loc + 'favicon-16x16.png');
+		icon_16.setAttribute('sizes', '16x16');
+		icon_16.setAttribute('rel', 'icon');
+		appendg.push(icon_16);
+		
+		var manifest = document.createElement('link');
+		manifest.setAttribute('href', hp_loc + 'site.webmanifest');
+		manifest.setAttribute('rel', 'manifest');
+		appendg.push(manifest);
+		
+		var favidata = [
+			{'href': absolutePath(hp_loc + 'apple-touch-icon.png'),'sizes': '180x180','rel': 'apple-touch-icon'},
+			{'href': absolutePath(hp_loc + 'favicon-32x32.png'),'sizes': '32x32', 'rel': 'icon'},
+			{'href': absolutePath(hp_loc + 'favicon-16x16.png'), 'sizes': '16x16','rel': 'icon'},
+			{'href': absolutePath(hp_loc + 'site.webmanifest'), 'rel': 'manifest'}
+		];
+		
 		//Jquery
 		var hp_jq = document.createElement('script');
 		hp_jq.setAttribute('src', hp_loc + 'assets/cjs/main.js');
+		appendg.push(hp_jq);
+		
 		//Append all
-		hp_head.append(hp_jq);
+		for(var i = 0; i < appendg.length; i++) {
+			hp_head.append(appendg[i]);
+		}
 	</script>
+	<title></title>
   </head>
   <body id="hp_mainbod">
 	<main>
 		<h1>About</h1>
 		<p><a hp_rep="pname"></a> is an attempt to provide a universal dashboard for the PG01 Team in ChildFund PNG to view their progress througout ICHOS 
 		but also provide quicklinks to do mundane activities like accessing programs, FMS, Salesforce, etc.</p>
-		<p>It is important to know that <a hp_rep="pname"></a> is not served on a server.</p>
+		<p>It is important to know that <a hp_rep="pname"></a> is a static website so please do not expect any fancy functionalities to be 
+		available.</p>
 	</main>
   </body>
 </html>
