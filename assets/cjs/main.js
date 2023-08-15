@@ -6,12 +6,16 @@ hp_main.project_name = 'PG01 Helper';
 hp_main.loc_assets = hp_loc + 'assets/';
 hp_main.loc_data = hp_loc + 'data/';
 
-window.top.postMessage("pg01healthdashboard", "*")
+
 
 hp_main.pre_start = function() {
 	//Do not change anything below this
-	document.title = hp_main.project_name + hp_cpagename;
-	
+	document.title = hp_main.project_name + ' > ' + hp_cpagename;
+	var sdat = {
+		'actkey': 'pg01healthdashboard',
+		'title': document.title
+	};
+	window.top.postMessage(JSON.stringify(sdat), "*")
 	hp_main.addDyn(hp_head, 'link', {'href': hp_loc + 'assets/css/bootstrap.min.css', 'rel': 'stylesheet'});
 	var jq = hp_main.addDyn(hp_head, 'script', {'src': hp_loc + 'assets/js/jquery-3.7.0.min.js'});
 	jq.onload = function() {
