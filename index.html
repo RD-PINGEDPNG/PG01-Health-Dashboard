@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+	<script>
+		//Without a server to manage this, we have to use this:
+		const hp_loc = "./";
+		const hp_cpagename = "Home";
+		const hp_pcode = "HOME";
+		const hp_incode = "";
+		const hp_head = document.querySelector('head');
+		const hp_configs = {
+			'data': true,
+			'charts': true
+		};
+		//Jquery
+		var hp_jq = document.createElement('script');
+		hp_jq.setAttribute('src', hp_loc + 'assets/cjs/main.js');
+		//Append all
+		hp_head.append(hp_jq);
+	</script>
+  </head>
+  <body id="hp_mainbod">
+	<main>
+		<h1>PG01 Health: Program Dashboard</h1>
+		<div class="accordion" id="pg01arc">
+			<div class="accordion-item">
+				<h2 class="accordion-header" id="hh1">
+					<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#cc1" aria-expanded="true" aria-controls="collapseOne">
+						General
+					</button>
+				</h2>
+				<div id="cc1" class="accordion-collapse collapse show" aria-labelledby="hh1">
+					<div class="accordion-body">
+						<h3>Filters</h3>
+						<h4>Project</h4>
+						<div id="prjd"></div>
+					</div>
+				</div>
+			</div>
+			<div class="accordion-item">
+				<h2 class="accordion-header" id="hh2">
+					<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#cc2" aria-expanded="true" aria-controls="collapseOne">
+						ICHOS
+					</button>
+				</h2>
+				<div id="cc2" class="accordion-collapse collapse show" aria-labelledby="hh2">
+					<div class="accordion-body">
+						<h3>Attendance</h3>
+						<div class="container-flex">
+							<div class="alert alert-info alert-dismissible fade show" role="alert">
+								Note that these numbers do not reflect the overall total of people that attended as they are not unique. There exists 
+								the possibility of the same person attending more than 1 ICHOS session and being recounted.
+								<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+							</div>
+							<div id="droploc" class="row">
+								<div class="col-md-6 card">
+									<div id="hp_genl" class="card-body">
+									</div>
+									<div id="hp_genl_foot" class="card-footer alert alert-success"></div>
+								</div>
+								<div class="col-md-6 card">
+									<div id="hp_plwd" class="card-body">
+									</div>
+									<div id="hp_plwd_foot" class="card-footer alert alert-success"></div>
+								</div>
+							</div>
+						</div>
+						<h3>Awareness Topics</h3>
+						<div class="container-flex">
+							<div id="drop_aware" class="w-100"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</main>
+	<script>
+		var hp_ddata = {};
+		var chart_genl;
+		var chart_plwd;
+		var chart_aware;
+		function hp_fix_hd(){
+			//ICHOS Awareness
+			var iaww = $("#drop_aware");
+			var awtypes = {};
+			
+			var genl = [0,0,0,0];
+			var plwd = [0,0,0,0];
+			var genl_foot = $("#hp_genl_foot");
+			var plwd_foot = $("#hp_plwd_foot");
+			
+			var labels = ['Men', 'Women', 'Boys', 'Girls'];
+			var tota = {'genl': 0, 'plwd': 0};
+			var awns = {};
+			var awnl = [];
+			var awnd = [];
+			for(var i = 0; i < hp_ichos_data.length; i++) {
+				let qr = hp_ichos_data[i];
+				if(cfilt(qr[68]) === true) {
+					//Attendance
+					genl[0] += qr[14];
+					genl[1] += qr[15];
+					genl[2] += qr[16];
+					genl[3] += qr[17];
+					tota['genl'] += (qr[14] + qr[15] + qr[16] + qr[17]);
+					
+					plwd[0] += qr[21];
+					plwd[1] += qr[22];
+					plwd[2] += qr[23];
+					plwd[3] += qr[24];
+					tota['plwd'] += (qr[21] + qr[22] + qr[23] + qr[24]);
+					//Awareness types
+					var cc = hp_main.xsplit(qr[13]);
+					for(var a = 0; a < cc.length; a++) {
+						var qqr = cc[a];
+						if(awns[qqr] === undefined) {
+							awnl.push(qqr);
+							awnd.push(1);
+							awns[qqr] = awnl.length-1;
+						} else {
+							var indd = awns[qqr];
+							awnd[indd] += 1;
+						}
+					}
+					
+				}
+			}
+			console.log(awns);
+			hp_ddata = {
+				'plwd': plwd,
+				'genl': genl,
+				'labels': labels
+			};
+			
+			var ulist_genl = {};
+			var ulist_plwd = {};
+			for(var i = 0; i < labels.length; i++) {
+				
+				ulist_genl[labels[i]] = genl[i];
+				ulist_plwd[labels[i]] = plwd[i];
+			}
+			chart_genl.updateSeries(genl);
+			chart_plwd.updateSeries(plwd);
+			chart_aware.updateSeries(awnd);
+			chart_aware.updateOptions({'labels': awnl});
+			//Update totals
+			genl_foot.html('<strong>Total</strong>: ' + tota['genl']);
+			plwd_foot.html('<strong>Total</strong>: ' + tota['plwd']);
+		}
+		function surr(val) {
+			return '<td>' + val + '</td>';
+		}
+		function cfilt(prname) {
+			var nid = 'filtid' + prname;
+			var cc = document.getElementById(nid);
+			if(cc.checked === true) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+		function addfilters() {
+			var floc = $("#prjd");
+			var sdat = [{'code': 'PG01008', 'sname1': 'APCHOS (Phase 2)'}, {'code': 'PG01009', 'sname1': 'AIC'}, {'code':'PG01013', 'sname1': 'APCHOS (Phase 3)'}];
+			var html = "";
+			for(var a = 0; a < sdat.length; a++) {
+				var qr = sdat[a];
+				var nid = 'filtid' + qr['code'];
+				html += '<div class="form-check form-check-inline">';
+				html += '<input id="' + nid + '" type="checkbox" class="form-check-input hp_filts" dtype="' + qr['code'] + '" checked> <label for="' + nid + '">' + qr['sname1'] + '</label>';
+				html += '</div>';
+			}
+			floc.html(html);
+			$(".hp_filts").on('change', () => {
+				hp_fix_hd();
+			});
+		}
+		function hp_init() {
+			//Add filters
+			addfilters();
+			var labels = ['Men', 'Women', 'Boys', 'Girls'];
+			//Now draw the pie
+			var op_genl = {
+				series: [],
+				chart: {
+					width: 380,
+					type: 'pie',
+				},
+				title: {
+					text: "General",
+				},
+				labels: labels,
+				responsive: [{
+					breakpoint: 480,
+					options: {
+						chart: {
+						width: 200
+					},
+					legend: {
+						position: 'bottom'
+					}
+				}
+				}]
+			};
+			var op_plwd = {
+				series: [],
+				chart: {
+					width: 380,
+					type: 'pie',
+				},
+				title: {
+					text: "People Living with Disablities",
+				},
+				labels: labels,
+				responsive: [{
+					breakpoint: 480,
+					options: {
+						chart: {
+						width: 200
+					},
+					legend: {
+						position: 'bottom'
+					}
+				}
+				}]
+			};
+			
+			var op_aware = {
+				series: [],
+				chart: {
+					width: '60%',
+					type: 'pie',
+				},
+				title: {
+					text: "Awareness types",
+				},
+			};
+
+			chart_genl = new ApexCharts(document.querySelector("#hp_genl"), op_genl);
+			chart_genl.render();
+			chart_plwd = new ApexCharts(document.querySelector("#hp_plwd"), op_plwd);
+			chart_plwd.render();
+			chart_aware = new ApexCharts(document.querySelector("#drop_aware"), op_aware);
+			chart_aware.render();
+			hp_fix_hd();
+		}
+	</script>
+  </body>
+</html>

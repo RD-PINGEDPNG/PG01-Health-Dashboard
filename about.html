@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+	<script>
+		//Without a server to manage this, we have to use this:
+		const hp_loc = "./";
+		const hp_cpagename = "About";
+		const hp_pcode = "ABOUT";
+		const hp_incode = "";
+		const hp_head = document.querySelector('head');
+		const hp_configs = {};
+		//Jquery
+		var hp_jq = document.createElement('script');
+		hp_jq.setAttribute('src', hp_loc + 'assets/cjs/main.js');
+		//Append all
+		hp_head.append(hp_jq);
+	</script>
+  </head>
+  <body id="hp_mainbod">
+	<main>
+		<h1>About</h1>
+		<p><a hp_rep="pname"></a> is an attempt to provide a universal dashboard for the PG01 Team in ChildFund PNG to view their progress througout ICHOS 
+		but also provide quicklinks to do mundane activities like accessing programs, FMS, Salesforce, etc.</p>
+		<p>It is important to know that <a hp_rep="pname"></a> is not served on a server.</p>
+	</main>
+  </body>
+</html>

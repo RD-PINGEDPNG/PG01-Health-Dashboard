@@ -1,0 +1,23 @@
+:root {
+	--bs-cf-rgb: 0, 122, 69;
+}
+body {
+	overflow-x: hidden;
+}
+.bg-cf {
+  --bs-bg-opacity: 1;
+  background-color: rgba(var(--bs-cf-rgb), var(--bs-bg-opacity)) !important;
+}
+.stetchy {
+	max-width: 100%;
+	overflow-x: scroll;
+}
+.cust-table, .cust-table tr, .cust-table td, .cust-table th {
+	border: solid 1px;
+	padding: 0.5em;
+}
+main {
+	margin-top: 4em; 
+	padding-left: 5px;
+	padding-right: 5px;
+}
