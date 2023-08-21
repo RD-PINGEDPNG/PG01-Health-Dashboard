@@ -5,16 +5,18 @@ var hp_main = {};
 hp_main.project_name = 'PG01 Helper';
 hp_main.loc_assets = hp_loc + 'assets/';
 hp_main.loc_data = hp_loc + 'data/';
-
+hp_main.version = '0.1.8';
 
 
 hp_main.pre_start = function() {
 	//Do not change anything below this
 	document.title = hp_main.project_name + ' > ' + hp_cpagename;
 	var sdat = {
+		
 		'actkey': 'pg01healthdashboard',
 		'title': document.title,
-		'favidata': favidata
+		'favidata': favidata,
+		'version': hp_main.version
 	};
 	window.top.postMessage(JSON.stringify(sdat), "*")
 	hp_main.addDyn(hp_head, 'link', {'href': hp_loc + 'assets/css/bootstrap.min.css', 'rel': 'stylesheet'});
